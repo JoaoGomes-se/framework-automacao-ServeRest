@@ -10,7 +10,8 @@
     "test:migration": "jest tests/migration --runInBand --verbose",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "report": "node src/helpers/logReport.js"
   },
   "keywords": [
     "qa",

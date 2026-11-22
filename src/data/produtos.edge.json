@@ -1,0 +1,68 @@
+[
+  {
+    "caso": "nome_vazio",
+    "descricao": "Produto com nome em branco",
+    "payload": {
+      "nome": "",
+      "preco": 100,
+      "descricao": "Produto sem nome",
+      "quantidade": 10
+    },
+    "statusEsperado": 400
+  },
+  {
+    "caso": "preco_zero",
+    "descricao": "Valor limite mínimo (preço igual a zero)",
+    "payload": {
+      "nome": "Produto Preco Zero QA",
+      "preco": 0,
+      "descricao": "Teste de valor limite zero",
+      "quantidade": 5
+    },
+    "statusEsperado": 400
+  },
+  {
+    "caso": "preco_negativo",
+    "descricao": "Preço negativo para validar regra de domínio",
+    "payload": {
+      "nome": "Produto Preco Negativo QA",
+      "preco": -50,
+      "descricao": "Teste de valor negativo",
+      "quantidade": 5
+    },
+    "statusEsperado": 400
+  },
+  {
+    "caso": "quantidade_negativa",
+    "descricao": "Quantidade de estoque negativa",
+    "payload": {
+      "nome": "Produto Estoque Negativo QA",
+      "preco": 250,
+      "descricao": "Teste de estoque negativo",
+      "quantidade": -1
+    },
+    "statusEsperado": 400
+  },
+  {
+    "caso": "valores_extremos_positivos",
+    "descricao": "Preço e quantidade com valores inteiros elevados",
+    "payload": {
+      "nome": "Servidor Enterprise QA Extreme",
+      "preco": 999999,
+      "descricao": "Teste com valores numéricos altos",
+      "quantidade": 100000
+    },
+    "statusEsperado": 201
+  },
+  {
+    "caso": "descricao_longa_e_especiais",
+    "descricao": "Descrição extensa com caracteres especiais e acentuação",
+    "payload": {
+      "nome": "Teclado Mecânico ABNT2 Çãõ-Pro #1",
+      "preco": 350,
+      "descricao": "Descrição detalhada com símbolos: @#$%&*()_+-=[]{}|;:',.<>?/ e texto repetido para validar armazenamento e serialização JSON sem quebras em campos longos.",
+      "quantidade": 15
+    },
+    "statusEsperado": 201
+  }
+]

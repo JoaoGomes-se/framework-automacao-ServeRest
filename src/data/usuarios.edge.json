@@ -1,0 +1,68 @@
+[
+  {
+    "caso": "nome_vazio",
+    "descricao": "Campo nome vazio para validar obrigatoriedade",
+    "payload": {
+      "nome": "",
+      "email": "vazio_nome_qa@qatest.com",
+      "password": "teste",
+      "administrador": "true"
+    },
+    "statusEsperado": 400
+  },
+  {
+    "caso": "email_invalido_sem_arroba",
+    "descricao": "E-mail sem domínio válido",
+    "payload": {
+      "nome": "Usuario Email Invalido",
+      "email": "usuariosemarroba.com",
+      "password": "teste",
+      "administrador": "false"
+    },
+    "statusEsperado": 400
+  },
+  {
+    "caso": "senha_vazia",
+    "descricao": "Campo password vazio",
+    "payload": {
+      "nome": "Usuario Sem Senha",
+      "email": "sem_senha_qa@qatest.com",
+      "password": "",
+      "administrador": "false"
+    },
+    "statusEsperado": 400
+  },
+  {
+    "caso": "administrador_valor_invalido",
+    "descricao": "Valor fora do padrão esperado ('true' ou 'false')",
+    "payload": {
+      "nome": "Usuario Admin Invalido",
+      "email": "admin_invalido_qa@qatest.com",
+      "password": "teste",
+      "administrador": "sim"
+    },
+    "statusEsperado": 400
+  },
+  {
+    "caso": "nome_texto_longo",
+    "descricao": "Nome com 255 caracteres para testar limite de campo",
+    "payload": {
+      "nome": "QA_Usuario_Teste_Longo_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "email": "texto_longo_qa@qatest.com",
+      "password": "SenhaLonga1234567890!@#$%",
+      "administrador": "false"
+    },
+    "statusEsperado": 201
+  },
+  {
+    "caso": "caracteres_especiais_e_acentos",
+    "descricao": "Nome com acentuação, apóstrofo, hífen e símbolos",
+    "payload": {
+      "nome": "Jônatas O'Connor-Silva & Cia <QA>",
+      "email": "especiais_qa@qatest.com",
+      "password": "P@ssw0rd!#%&*()",
+      "administrador": "true"
+    },
+    "statusEsperado": 201
+  }
+]
