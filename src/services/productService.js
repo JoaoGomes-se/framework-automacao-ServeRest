@@ -1,4 +1,4 @@
-const RequestManager = require('../core/requestManager');
+const RequestManager = require("../core/requestManager");
 
 class ProductService {
   constructor() {
@@ -6,9 +6,9 @@ class ProductService {
   }
 
   cadastrar(payload, token = null) {
-    const req = this.requestManager.post('/produtos').send(payload);
+    const req = this.requestManager.post("/produtos").send(payload);
     if (token) {
-      req.set('Authorization', token);
+      req.set("Authorization", token);
     }
     return req;
   }
@@ -18,7 +18,7 @@ class ProductService {
   }
 
   listar(params = {}) {
-    const req = this.requestManager.get('/produtos');
+    const req = this.requestManager.get("/produtos");
     if (Object.keys(params).length > 0) {
       req.query(params);
     }
@@ -28,7 +28,7 @@ class ProductService {
   excluir(id, token = null) {
     const req = this.requestManager.delete(`/produtos/${id}`);
     if (token) {
-      req.set('Authorization', token);
+      req.set("Authorization", token);
     }
     return req;
   }
