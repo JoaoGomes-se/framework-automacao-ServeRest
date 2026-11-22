@@ -35,7 +35,7 @@ npm run lint
 npm run format
 ```
 
-Regras da equipe e registro da última execução em [docs/qualidade-de-codigo.md](docs/qualidade-de-codigo.md).
+Regras do linter e registro da última execução em [docs/qualidade-de-codigo.md](docs/qualidade-de-codigo.md). As [convenções de uso do logger](docs/convencoes-logger.md) definem os níveis, o formato e os dados permitidos nos logs.
 
 ## Como contribuir
 
