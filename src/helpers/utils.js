@@ -17,6 +17,5 @@ function generateUniqueProductName() {
 
 module.exports = {
   generateUniqueEmail,
-  generateUniqueProductName
+  generateUniqueProductName,
 };
-

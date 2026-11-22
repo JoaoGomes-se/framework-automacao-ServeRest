@@ -1,4 +1,4 @@
-const RequestManager = require('../core/requestManager');
+const RequestManager = require("../core/requestManager");
 
 class UserService {
   constructor() {
@@ -6,7 +6,7 @@ class UserService {
   }
 
   cadastrar(payload) {
-    return this.requestManager.post('/usuarios').send(payload);
+    return this.requestManager.post("/usuarios").send(payload);
   }
 
   buscarPorId(id) {
@@ -14,7 +14,7 @@ class UserService {
   }
 
   listar(params = {}) {
-    const req = this.requestManager.get('/usuarios');
+    const req = this.requestManager.get("/usuarios");
     if (Object.keys(params).length > 0) {
       req.query(params);
     }
