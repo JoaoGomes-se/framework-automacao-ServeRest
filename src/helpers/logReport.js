@@ -209,24 +209,34 @@ function formatMarkdownReport(summary, sourceName = "execucao.log") {
 }
 
 /**
- * Localiza o arquivo .log mais recente na pasta logs/.
+ * Localiza os arquivos .log não vazios na pasta logs/, ordenados do mais antigo ao mais recente.
+ * @param {string} logsDir
+ * @returns {Array<string>}
+ */
+function findLogFiles(logsDir) {
+  if (!fs.existsSync(logsDir)) return [];
+
+  return fs
+    .readdirSync(logsDir)
+    .filter((file) => file.endsWith(".log"))
+    .map((file) => {
+      const fullPath = path.join(logsDir, file);
+      const stat = fs.statSync(fullPath);
+      return { fullPath, size: stat.size, mtime: stat.mtimeMs };
+    })
+    .filter((item) => item.size > 0)
+    .sort((a, b) => a.mtime - b.mtime)
+    .map((item) => item.fullPath);
+}
+
+/**
+ * Localiza o arquivo .log não vazio mais recente na pasta logs/.
  * @param {string} logsDir
  * @returns {string|null}
  */
 function findLatestLogFile(logsDir) {
-  if (!fs.existsSync(logsDir)) return null;
-
-  const files = fs
-    .readdirSync(logsDir)
-    .filter((file) => file.endsWith(".log"))
-    .map((file) => ({
-      name: file,
-      fullPath: path.join(logsDir, file),
-      mtime: fs.statSync(path.join(logsDir, file)).mtimeMs,
-    }))
-    .sort((a, b) => b.mtime - a.mtime);
-
-  return files.length > 0 ? files[0].fullPath : null;
+  const files = findLogFiles(logsDir);
+  return files.length > 0 ? files[files.length - 1] : null;
 }
 
 /**
@@ -253,17 +263,61 @@ function generateReportFromFile(logFilePath, outputDir = path.resolve(process.cw
   return { reportPath, summary, markdown };
 }
 
+/**
+ * Gera um relatório consolidado a partir de todos os logs não vazios em logs/.
+ * @param {string} logsDir
+ * @param {string} outputDir
+ * @returns {{ reportPath: string, summary: object, markdown: string, filesCount: number }}
+ */
+function generateReportFromDirectory(
+  logsDir = path.resolve(process.cwd(), "logs"),
+  outputDir = path.resolve(process.cwd(), "reports")
+) {
+  const files = findLogFiles(logsDir);
+  const allEntries = files.flatMap((file) => parseLogContent(fs.readFileSync(file, "utf-8")));
+  const summary = summarizeLogs(allEntries);
+  const sourceLabel =
+    files.length === 1
+      ? path.basename(files[0])
+      : `${files.length} arquivos em logs/ (${path.basename(files[0])} ... ${path.basename(files[files.length - 1])})`;
+  const markdown = formatMarkdownReport(summary, sourceLabel);
+
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
+  const reportPath = path.join(outputDir, "relatorio_consolidado.md");
+  fs.writeFileSync(reportPath, markdown, "utf-8");
+
+  return { reportPath, summary, markdown, filesCount: files.length };
+}
+
 if (require.main === module) {
   const inputArg = process.argv[2];
   const logsDir = path.resolve(process.cwd(), "logs");
-  const targetFile = inputArg ? path.resolve(process.cwd(), inputArg) : findLatestLogFile(logsDir);
 
-  if (!targetFile || !fs.existsSync(targetFile)) {
-    process.stderr.write("Nenhum arquivo de log encontrado em logs/. Execute os testes primeiro ou informe o caminho do log.\n");
-    process.exitCode = 1;
+  if (inputArg) {
+    const targetFile = path.resolve(process.cwd(), inputArg);
+    if (!fs.existsSync(targetFile)) {
+      process.stderr.write(`Arquivo de log não encontrado: ${targetFile}\n`);
+      process.exitCode = 1;
+    } else {
+      const { reportPath } = generateReportFromFile(targetFile);
+      process.stdout.write(`Relatório gerado com sucesso em: ${reportPath}\n`);
+    }
   } else {
-    const { reportPath } = generateReportFromFile(targetFile);
-    process.stdout.write(`Relatório gerado com sucesso em: ${reportPath}\n`);
+    const files = findLogFiles(logsDir);
+    if (files.length === 0) {
+      process.stderr.write(
+        "Nenhum arquivo de log com conteúdo encontrado em logs/. Execute os testes primeiro ou informe o caminho do log.\n"
+      );
+      process.exitCode = 1;
+    } else {
+      const { reportPath, filesCount } = generateReportFromDirectory(logsDir);
+      process.stdout.write(
+        `Relatório consolidado (${filesCount} logs) gerado com sucesso em: ${reportPath}\n`
+      );
+    }
   }
 }
 
@@ -272,6 +326,8 @@ module.exports = {
   parseLogContent,
   summarizeLogs,
   formatMarkdownReport,
+  findLogFiles,
   findLatestLogFile,
   generateReportFromFile,
+  generateReportFromDirectory,
 };
