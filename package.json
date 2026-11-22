@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand --verbose",
+    "test:unit": "jest tests/unit --runInBand --verbose",
     "test:poc": "jest tests/poc --runInBand --verbose",
     "test:migration": "jest tests/migration --runInBand --verbose",
     "lint": "eslint .",
