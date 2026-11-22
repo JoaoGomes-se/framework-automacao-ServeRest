@@ -35,6 +35,8 @@ npm run lint
 npm run format
 ```
 
+Regras da equipe e registro da última execução em [docs/qualidade-de-codigo.md](docs/qualidade-de-codigo.md).
+
 ## Como contribuir
 
 Veja [CONTRIBUTING.md](CONTRIBUTING.md).
